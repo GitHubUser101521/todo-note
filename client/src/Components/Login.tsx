@@ -1,7 +1,7 @@
 import {} from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAccountStore } from '../AccountStore';
 
 const signupValidationSchema = yup.object().shape({
@@ -19,8 +19,8 @@ const signupValidationSchema = yup.object().shape({
 type SignupFormData = yup.InferType<typeof signupValidationSchema>;
 
 function Login() {
-    const navigate = useNavigate()
     const { setAccountInfos } = useAccountStore()
+    const navigate = useNavigate()
 
     const formik = useFormik<SignupFormData>({
         initialValues: {
@@ -42,9 +42,9 @@ function Login() {
                 if (!response.ok) {
                     alert(`Incorrect name or password: ${data.message}`);
                 } else {
+                    navigate('/todolist')
                     formik.resetForm();
                     setAccountInfos(data)
-                    navigate('/todolist')
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -90,7 +90,8 @@ function Login() {
                             <div className="text-red-500 text-sm">{formik.errors.password}</div>
                         ) : null}
                     </div>
-                    <button type="submit" className="w-full bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-600 transition duration-200">Log In</button> 
+                    <button type="submit" className="w-full bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-600 transition duration-200 mb-2">Log In</button> 
+                    <p>Don't have an account? <Link to="/signup" className='underline text-blue-800'>Signup</Link></p>
                 </form>
             </div>
         </div>

@@ -1,5 +1,5 @@
 import { useFormik } from 'formik';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import * as yup from 'yup';
 import { useAccountStore } from '../AccountStore';
 
@@ -89,7 +89,8 @@ function Signup() {
                             <div className="text-red-500 text-sm">{formik.errors.password}</div>
                         ) : null}
                     </div>
-                    <button type="submit" className="w-full bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-600 transition duration-200">Sign Up</button>
+                    <button type="submit" className="w-full bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-600 transition duration-200 mb-2">Sign Up</button>
+                    <p>Already have an account? <Link to="/login" className='underline text-blue-800'>Login</Link></p>
                 </form>
             </div>
         </div>

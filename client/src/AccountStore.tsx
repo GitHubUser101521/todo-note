@@ -10,7 +10,9 @@ export type AccountType = {
 
 export type TodoType = {
     task: string,
-    completed: boolean
+    completed: boolean,
+    createdAt: number,
+    _id: string
 }
 
 type AccountState = {

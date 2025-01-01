@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { Login, Signup, Landing, ErrorElement, Todolist, Notes } from './Components'
+import { Login, Signup, Landing, ErrorElement, Todolist, Notes, Settings } from './Components'
 
 const router = createBrowserRouter([
   {
@@ -28,6 +28,11 @@ const router = createBrowserRouter([
   {
     path: '/signup',
     element: <Signup />,
+    errorElement: <ErrorElement />
+  }, 
+  {
+    path: '/settings',
+    element: <Settings />,
     errorElement: <ErrorElement />
   }
 ])

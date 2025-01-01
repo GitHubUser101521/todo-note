@@ -1,48 +1,55 @@
-import { useEffect } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { useAccountStore, TodoType } from '../../AccountStore'
+import Profile from '../Profile'
 
 function Todolist() {
-    const navigate = useNavigate()
     const { name, todos, _id } = useAccountStore.getState().accountInfos
-    const { createTodo } = useAccountStore()
-
-    useEffect(() => {
-        if (name === '') {
-            navigate('/login')
-        } 
-    }, [])
+    const { accountInfos, setAccountInfos } = useAccountStore()
 
     const handleAddTask = async () => {
-        const newTask = prompt('New task:')
+        const newTask = prompt('New task:');
 
-        if (newTask === '') {
-            return
-        }
+        if (!newTask) return; 
 
         try {
-            const newTodo: TodoType = {
-                task: newTask || '',
-                completed: false
-            }
-
-            console.log(name, todos, _id)
+            const newTodoWithoutId = {
+                task: newTask,
+                completed: false,
+                createdAt: Date.now(),
+            };
 
             const response = await fetch(`http://localhost:3000/createTodo/${_id}`, {
-                method: 'POST', 
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newTodo),
-            })
-    
-            const data = await response.json()
+                body: JSON.stringify(newTodoWithoutId),
+            });
 
-            if (response.ok) {    
-                createTodo(newTodo)
-            } else {
-                alert('Error:' + data.message)
+            if (!response.ok) {
+                const errorData = await response.json(); // Get error message from server
+                alert(`Error: ${errorData.message || 'Failed to add task'}`);
+                return; // Stop execution on error
             }
+
+            const createdTodo: TodoType = await response.json(); // Get the todo WITH _id
+
+            setAccountInfos({ ...accountInfos, todos: [ ...todos, createdTodo ] })
         } catch (error) {
-            console.log(error)
+            console.error("Error adding task:", error);
+            alert('An error occurred while adding the task.');
+        }
+    }
+
+    const handleDeleteTask = async (todo: TodoType) => {
+        const response = await fetch(`http://localhost:3000/deleteTodo/${_id}/${todo._id}`, {
+            method: 'DELETE', 
+        })
+
+        const data = await response.json()
+
+        if (!response.ok) {
+           alert('An error has occured') 
+        } else {
+            setAccountInfos({ ...accountInfos, todos: data.todos })
         }
     }
 
@@ -56,10 +63,15 @@ function Todolist() {
 
                 {todos ?
                     todos.map((todo) => (
-                        <div key={todo.task} className='flex gap-4 h-min'>
-                            <input type="checkbox" />
-                            <p>{todo.task}</p>
-                        </div>
+                        <span key={todo._id} className='flex gap-4 items-center h-min justify-between mb-2'>
+                            <span className='flex gap-4'>
+                                <input type="checkbox" />
+                                <span>{todo.task}</span>
+                                <span>{todo._id}</span>
+                            </span>
+
+                            <button className='bg-red-500 rounded py-1 px-2 text-white hover:bg-red-600' onClick={() => handleDeleteTask(todo)}>Delete</button>
+                        </span>
                     ))
                     :
                     <p>All tasks are finished!</p>
@@ -86,7 +98,7 @@ function Todolist() {
                 <div className='h-min flex justify-between items-center'>
                     <button>X</button>
 
-                    <div className='profile-picture'>{name[0]}</div>
+                    <Profile />
                 </div>
             </div>
         </div>
