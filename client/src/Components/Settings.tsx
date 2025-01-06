@@ -6,18 +6,21 @@ function Settings() {
     const handleLogOut = async () => {
       try {
         const response = await fetch('http://localhost:3000/logout', {
-          method: 'POST'
+          method: 'DELETE'
         });
     
         if (response.ok) {
-          console.log('Logged out successfully!');
-          navigate('/')
+          const data = await response.json()
+          console.log(data.message); // Log the success message from the server
+          navigate('/'); // Redirect using useNavigate
         } else {
-          const data = await response.json();
-          console.error('Logout error:', data.message);
+          const errorData = await response.json(); // Parse JSON error response
+          console.error('Logout error:', errorData.message);
+          // Optionally display an error message to the user
         }
       } catch (error) {
         console.error('Error during logout:', error);
+        // Optionally display a generic error message to the user
       }
     };
 

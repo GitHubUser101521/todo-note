@@ -1,5 +1,5 @@
 import {} from 'react'
-import { useAccountStore } from '../AccountStore'
+import { useAccountStore } from '../Stores/AccountStore'
 import { Link } from 'react-router-dom'
 
 function Profile() {

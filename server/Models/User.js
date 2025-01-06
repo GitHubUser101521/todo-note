@@ -3,6 +3,13 @@ import mongoose from 'mongoose'
 const TodoSchema = new mongoose.Schema({
     task: String,
     completed: Boolean,
+    desc: String,
+    createdAt: String,
+    category: {
+        type: String,
+        default: 'All'
+    },
+    color: String
 });
 
 const UserSchema = new mongoose.Schema({
@@ -22,7 +29,21 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now 
     },
-    todos: [TodoSchema]
+    todos: [TodoSchema],
+    categories: {
+        type: {
+            todos: [String],
+            notes: [String]
+        },
+        default: {
+            todos: ['All'],
+            notes: ['All']
+        }
+    },
+    colors: {
+        type: [String],
+        default: ['default', 'red', 'yellow', 'green', 'blue', 'purple']
+    }
 })
 
 const UserModel = mongoose.model('user', UserSchema, 'users')

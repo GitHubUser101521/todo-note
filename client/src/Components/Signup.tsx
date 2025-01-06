@@ -1,7 +1,7 @@
 import { useFormik } from 'formik';
 import { useNavigate, Link } from 'react-router-dom';
 import * as yup from 'yup';
-import { useAccountStore } from '../AccountStore';
+import { useAccountStore } from '../Stores/AccountStore';
 
 const signupValidationSchema = yup.object().shape({
     name: yup.string()
