@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { Login, Signup, Landing, ErrorElement, Todolist, Notes, Settings } from './Components'
+import { Login, Signup, Landing, ErrorElement, Todolist, Notes, Settings, Note } from './Components'
 
 const router = createBrowserRouter([
   {
@@ -18,6 +18,11 @@ const router = createBrowserRouter([
   {
     path: '/notes',
     element: <Notes />,
+    errorElement: <ErrorElement />
+  },
+  {
+    path: '/notes/:id', 
+    element: <Note />,
     errorElement: <ErrorElement />
   },
   {

@@ -1,40 +1,102 @@
-import {} from 'react'
-import { NavLink } from 'react-router-dom'
-import Profile from '../Profile'
+import { useNavigate } from 'react-router-dom'
+import NotePreview from './NotePreview'
+import NoteCategoryForm from './NoteCategoryForm'
+
+import { NoteType, useAccountStore, useNoteStore } from '../../Utils/Utils'
+import SideBar from '../SideBar'
 
 function Notes() {
+    const { accountInfos, setAccountInfos, currentCategory, setCurrentCategory } = useAccountStore()
+    const { setCurrentNote, isNoteCategoryFormOpen, setIsNoteCategoryFormOpen } = useNoteStore()
+    const { _id, notes, categories } = accountInfos
+    const navigate = useNavigate()
+
+    const addNote = async () => {
+        const defaultNote: NoteType = {
+            _id: '',
+            title: 'No title',
+            createdAt: Date.now().toString(),
+            content: '',
+            category: 'All',
+            color: 'default'
+        }
+
+        const response = await fetch(`http://localhost:3000/createNote/${_id}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(defaultNote),
+        })
+
+        const newNote = await response.json()
+
+        if (response.ok) {
+            const newAccountState = {
+                ...accountInfos, notes: [ ...accountInfos.notes, newNote]
+            }
+
+            setAccountInfos(newAccountState)
+            setCurrentNote(newNote)
+            navigate(`/notes/${newNote._id}`)
+        } else {
+            console.log('no')
+        }
+    }
+
+    const handleChangeCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        if (e.target.value === 'add') {
+            setIsNoteCategoryFormOpen(true)
+            e.target.value = 'All'
+        } else {
+            setCurrentCategory(e.target.value)
+        }
+    } 
+
+    const filteredNotes = notes.filter(note => note.category === currentCategory)
+
 return (
     <div className='flex h-screen'>
-        <div className='w-full p-20'>
-            <h1 className='text-4xl font-bold'>Notes</h1>
-            <button className='text-blue-950 my-3'> + Add note</button>
+        <div className='flex flex-col p-20 pb-8 w-4/5 mx-auto'>
+            <>
+                <h1 className='text-5xl font-bold'>Notes</h1>
+                <div className='flex justify-between h-min py-2 text-lg'>
+                    <button 
+                        className='text-blue-950'
+                        onClick={addNote}
+                    > + Add note</button>
 
-            <hr className='mb-3'/>
+                    <select 
+                        className='border rounded-md shadow-sm text-center'
+                        onChange={(e) => handleChangeCategory(e)}
+                    >
+                        {
+                            categories.notes.map((c) => (
+                                <option key={c} value={c}>{c}</option>
+                            ))
+                        }
+                        <option value='add'>+ Add category</option>
+                    </select>
+                </div>
+
+                <hr className='mb-3'/>
+            </>
+
+            <div className='grid grid-cols-3 gap-4 mt-4 overflow-y-scroll'>
+                {
+                    filteredNotes.length > 0 ? 
+                        notes.map((note) => (
+                            <NotePreview key={note._id} { ...note }/>
+                        ))
+                        :
+                        <p>Note is empty!</p>
+                }
+            </div>
         </div>
-            
-        <div className='border-l-2 w-1/4 bg-gray-100 flex flex-col justify-between p-4'>
-            <div className='w-full h-min flex justify-around pb-4'>
-                <NavLink to='/todolist'>
-                    <p>Todolist</p>
-                </NavLink>
 
-                <NavLink to='/notes'>
-                    <p>Notes</p>
-                </NavLink>
-            </div>
+        <SideBar />
 
-            <hr className='border-b-2'/>
-
-            <div className='mt-4'>
-                njfd
-            </div>
-
-            <div className='h-min flex justify-between items-center'>
-                <button>X</button>
-
-                <Profile />
-            </div>
-        </div>
+        {
+            isNoteCategoryFormOpen && <NoteCategoryForm />
+        }
     </div>
 )
 }

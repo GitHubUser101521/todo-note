@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import session from 'express-session';
 import connectMongoDBSession from 'connect-mongodb-session';
-import { AccountRouter, TodoRouter } from './Routes/Routers.js'
+import { AccountRouter, NoteRouter, TodoRouter } from './Routes/Routers.js'
 
 const connectionString = 'mongodb://cherrylcallistacheniago:5dY37ScYM0PunWt6@cluster0-shard-00-00.w41yh.mongodb.net:27017,cluster0-shard-00-01.w41yh.mongodb.net:27017,cluster0-shard-00-02.w41yh.mongodb.net:27017/?replicaSet=atlas-133f4s-shard-0&ssl=true&authSource=admin';
 const PORT = 3000;
@@ -38,6 +38,7 @@ app.use(
 
 app.use(AccountRouter)
 app.use(TodoRouter)
+app.use(NoteRouter)
 
 app.listen(PORT, () => {
     console.log(`Running on port ${PORT}`);

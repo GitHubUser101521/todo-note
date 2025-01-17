@@ -1,9 +1,11 @@
-import { useRef, useEffect } from 'react'
-import { useAccountStore } from '../../Stores/AccountStore';
+import { useRef, useEffect, useState } from 'react'
+import { useAccountStore } from '../../Utils/Utils';
+import PopupBackground from '../PopupBackground'
 
 function CategoryForm() {
-    const { categories, _id } = useAccountStore.getState().accountInfos
-    const { addTodoCategory, deleteTodoCategory } = useAccountStore()
+    const { addTodoCategory, deleteTodoCategory, accountInfos } = useAccountStore()
+    const { categories, _id } = accountInfos
+    const [ error, setError ] = useState('')
     const inputRef = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
@@ -15,16 +17,22 @@ function CategoryForm() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        const newCategory = inputRef.current?.value || ''
-
-        if (!newCategory) {
+        if (categories.todos.length > 12) {
+            setError('You cannot have more than 12 categories')
             return
         }
 
+        const newCategory = inputRef.current?.value || ''
+
+        if (!newCategory || newCategory.length > 12) {
+            setError('New category mush be atleast 1 character and less than 12')
+            return
+        }
+        
         const check = categories.todos.includes(newCategory)
 
         if (check) {
-            console.log(check, 'udah ada')
+            setError(`${newCategory} is already a category`)
             return
         }
 
@@ -37,6 +45,7 @@ function CategoryForm() {
         const data = await response.json()
 
         if(response.ok) {
+            setError('')
             addTodoCategory(newCategory)
             if (inputRef.current) {
                 inputRef.current.value = ''
@@ -53,6 +62,7 @@ function CategoryForm() {
             })
 
             if (response.ok) {
+                setError('')
                 deleteTodoCategory(c)
             } else {
                 console.log('Response not ok :(')
@@ -65,7 +75,7 @@ function CategoryForm() {
     
   return (
     <>
-        <div className='background'></div>
+        <PopupBackground />
         <form onSubmit={(e) => handleSubmit(e)} className='popup'>
             <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">New Category</label>
@@ -83,6 +93,8 @@ function CategoryForm() {
                         Add
                     </button>
                 </div>
+
+                { error && <p className="text-red-600 text-xs">{ error }</p>}
             </div>
 
             <div className="mb-4 h-fit">
@@ -96,6 +108,7 @@ function CategoryForm() {
                             <span key={c} className='bg-slate-200 rounded-full px-3 gap-3 h-10 flex items-center'>
                                 {c} 
                                 <button 
+                                    type="button"
                                     className='cursor-pointer hover:font-bold rounded-full'
                                     onClick={() => handleDeleteCategory(c)}
                                 >

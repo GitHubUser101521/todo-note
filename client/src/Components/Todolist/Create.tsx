@@ -1,14 +1,16 @@
 import { useRef, useEffect } from 'react'
-import { useCreateTodoStore } from '../../Stores/TodoStore'
-import { TodoType, useAccountStore } from '../../Stores/AccountStore'
+import { TodoType, useAccountStore, useTodoStore } from '../../Utils/Utils'
+import PopupBackground from '../PopupBackground';
 
 
 function Create() {
-    const { setIsCreateOpen } = useCreateTodoStore()
-    const { newTodo, setNewTodo, capitalize } = useCreateTodoStore()
     const { todos, _id, colors, categories } = useAccountStore.getState().accountInfos
     const { setAccountInfos, accountInfos } = useAccountStore()
-    const firstFieldRef = useRef<HTMLInputElement>(null); // Ref for the first input
+    const firstFieldRef = useRef<HTMLInputElement>(null); 
+
+    const {
+        newTodo, setNewTodo, setIsCreateOpen, capitalize
+    } = useTodoStore()
 
     useEffect(() => {
         if (firstFieldRef.current) {
@@ -54,7 +56,7 @@ function Create() {
     
   return (
     <>
-        <div className="background"></div>
+        <PopupBackground />
         <div className="popup">
             <h1 className="text-xl font-bold mb-4">Create new todo:</h1>
             <form onSubmit={handleAddTask}>

@@ -55,7 +55,7 @@ TodosRouter.delete('/deleteTodo/:userId/:todoId', async (req, res) => {
         return res.status(404).json({ message: 'User not found' });
       }
   
-      res.status(200).json(updatedUser);
+      res.status(200).json(updatedUser.todos);
     } catch (error) {
       console.error("Error deleting todo:", error); // Log the error for debugging
       res.status(500).json({ message: 'Error deleting todo: ' + error });

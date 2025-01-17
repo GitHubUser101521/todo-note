@@ -8,15 +8,33 @@ type newTodoType = {
     color: string
 }
 
-type CreateTodoType = {
+type TodoStoreType = {
+
+    // CREATE
+
     isCreateOpen: boolean,
     setIsCreateOpen: (newState: boolean) => void,
     newTodo: newTodoType,
     setNewTodo: (newState: newTodoType) => void,
-    capitalize: (str: string) => string
+    capitalize: (str: string) => string,
+
+    // EDIT
+
+    isEditOpen: boolean,
+    setIsEditOpen: (newState: boolean) => void,
+    currentTodo: TodoType,
+    setCurrentTodo: (newTodo: TodoType) => void,
+
+    // CATEGORY
+
+    isCategoryFormOpen: boolean,
+    setIsCategoryFormOpen: (newState: boolean) => void
 };
 
-export const useCreateTodoStore = create<CreateTodoType>((set) => ({ 
+const useTodoStore = create<TodoStoreType>((set) => ({ 
+
+    // CREATE
+
     isCreateOpen: false,
     setIsCreateOpen: (newState: boolean) => set({ isCreateOpen: newState }),
     newTodo: {
@@ -26,17 +44,10 @@ export const useCreateTodoStore = create<CreateTodoType>((set) => ({
         color: 'default'
     },
     setNewTodo: (newState: newTodoType) => set({ newTodo: newState }),
-    capitalize: (str: string) => {return str[0].toUpperCase() + str.slice(1)}
-}));
+    capitalize: (str: string) => {return str[0].toUpperCase() + str.slice(1)},
 
-type EditTodoType = {
-    isEditOpen: boolean,
-    setIsEditOpen: (newState: boolean) => void,
-    currentTodo: TodoType,
-    setCurrentTodo: (newTodo: TodoType) => void
-};
+    // EDIT
 
-export const useEditTodoStore = create<EditTodoType>((set) => ({ 
     isEditOpen: false,
     setIsEditOpen: (newState: boolean) => set({ isEditOpen: newState }),
     currentTodo: {
@@ -48,15 +59,13 @@ export const useEditTodoStore = create<EditTodoType>((set) => ({
         desc: '',
         color: ''
     },
-    setCurrentTodo: (newTodo: TodoType) => set({ currentTodo: newTodo })
-}));
+    setCurrentTodo: (newTodo: TodoType) => set({ currentTodo: newTodo }),
 
-type TodoCategoryType = {
-    isCategoryFormOpen: boolean,
-    setIsCategoryFormOpen: (newState: boolean) => void
-}
+    // CATEGORY
 
-export const useTodoCategoryStore = create<TodoCategoryType>((set) => ({ 
     isCategoryFormOpen: false,
     setIsCategoryFormOpen: (newState: boolean) => set({ isCategoryFormOpen: newState })
 }));
+
+
+export default useTodoStore

@@ -1,14 +1,16 @@
 import { useRef, useEffect } from 'react'
-import { useAccountStore } from '../../Stores/AccountStore'
-import { useCreateTodoStore, useEditTodoStore } from '../../Stores/TodoStore'
+import { useAccountStore, useTodoStore } from '../../Utils/Utils'
+import PopupBackground from '../PopupBackground';
 
 
 function Edit() {
-    const { setIsEditOpen, currentTodo, setCurrentTodo } = useEditTodoStore()
-    const { _id, colors, categories } = useAccountStore.getState().accountInfos
-    const { capitalize } = useCreateTodoStore()
     const { setAccountInfos, accountInfos } = useAccountStore()
+    const { _id, colors, categories } = accountInfos
     const firstFieldRef = useRef<HTMLInputElement>(null); 
+
+    const {
+        setIsEditOpen, currentTodo, setCurrentTodo, capitalize
+    } = useTodoStore()
 
     useEffect(() => {
         if (firstFieldRef.current) {
@@ -65,7 +67,7 @@ function Edit() {
     
   return (
     <>
-        <div className="background"></div>
+        <PopupBackground />
         <div className="popup">
             <h1 className="text-xl font-bold mb-4">Edit todo:</h1>
             <form onSubmit={handleEditTask}>

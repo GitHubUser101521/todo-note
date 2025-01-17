@@ -12,6 +12,14 @@ const TodoSchema = new mongoose.Schema({
     color: String
 });
 
+export const NoteSchema = new mongoose.Schema({
+    title: String,
+    createdAt: String,
+    content: String,
+    category: String,
+    color: String
+})
+
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -30,6 +38,7 @@ const UserSchema = new mongoose.Schema({
         default: Date.now 
     },
     todos: [TodoSchema],
+    notes: [NoteSchema],
     categories: {
         type: {
             todos: [String],
