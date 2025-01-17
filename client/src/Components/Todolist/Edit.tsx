@@ -108,7 +108,7 @@ function Edit() {
                             onChange={(e) => { setCurrentTodo({ ...currentTodo, category: e.target.value})}}
                         >
                             {
-                                categories.todos.map((c) => (
+                                categories.map((c) => (
                                     <option key={c} value={c}>{c}</option>
                                 ))
                             }

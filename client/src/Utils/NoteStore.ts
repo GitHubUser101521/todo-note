@@ -8,8 +8,6 @@ type NoteStoreType = {
     currentNote: NoteType,
     setCurrentNote: (newState: NoteType) => void,
     convertToDate: (timestamp: string) => string,
-    isNoteCategoryFormOpen: boolean,
-    setIsNoteCategoryFormOpen: (newState: boolean) => void
 }
 
 export const useNoteStore = create<NoteStoreType>()(
@@ -21,9 +19,7 @@ export const useNoteStore = create<NoteStoreType>()(
                 title: '',
                 createdAt: '',
                 content: '',
-                category: '',
                 _id: '',
-                color: ''
             },
             setCurrentNote: (newState) => set({ currentNote: newState }),
             convertToDate: (timestamp: string) => {
@@ -35,10 +31,6 @@ export const useNoteStore = create<NoteStoreType>()(
                     return "Invalid Date"; // Or handle the error as needed
                 }
             },
-            isNoteCategoryFormOpen: false,
-            setIsNoteCategoryFormOpen: (newState) => {
-                set({ isNoteCategoryFormOpen: newState })
-            }
         }),
         {
             name: 'note-storage', 

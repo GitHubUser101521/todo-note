@@ -1,14 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import NotePreview from './NotePreview'
-import NoteCategoryForm from './NoteCategoryForm'
 
 import { NoteType, useAccountStore, useNoteStore } from '../../Utils/Utils'
 import SideBar from '../SideBar'
 
 function Notes() {
-    const { accountInfos, setAccountInfos, currentCategory, setCurrentCategory } = useAccountStore()
-    const { setCurrentNote, isNoteCategoryFormOpen, setIsNoteCategoryFormOpen } = useNoteStore()
-    const { _id, notes, categories } = accountInfos
+    const { accountInfos, setAccountInfos } = useAccountStore()
+    const { setCurrentNote } = useNoteStore()
+    const { _id, notes } = accountInfos
     const navigate = useNavigate()
 
     const addNote = async () => {
@@ -16,9 +15,7 @@ function Notes() {
             _id: '',
             title: 'No title',
             createdAt: Date.now().toString(),
-            content: '',
-            category: 'All',
-            color: 'default'
+            content: ''
         }
 
         const response = await fetch(`http://localhost:3000/createNote/${_id}`, {
@@ -42,17 +39,6 @@ function Notes() {
         }
     }
 
-    const handleChangeCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        if (e.target.value === 'add') {
-            setIsNoteCategoryFormOpen(true)
-            e.target.value = 'All'
-        } else {
-            setCurrentCategory(e.target.value)
-        }
-    } 
-
-    const filteredNotes = notes.filter(note => note.category === currentCategory)
-
 return (
     <div className='flex h-screen'>
         <div className='flex flex-col p-20 pb-8 w-4/5 mx-auto'>
@@ -63,18 +49,6 @@ return (
                         className='text-blue-950'
                         onClick={addNote}
                     > + Add note</button>
-
-                    <select 
-                        className='border rounded-md shadow-sm text-center'
-                        onChange={(e) => handleChangeCategory(e)}
-                    >
-                        {
-                            categories.notes.map((c) => (
-                                <option key={c} value={c}>{c}</option>
-                            ))
-                        }
-                        <option value='add'>+ Add category</option>
-                    </select>
                 </div>
 
                 <hr className='mb-3'/>
@@ -82,7 +56,7 @@ return (
 
             <div className='grid grid-cols-3 gap-4 mt-4 overflow-y-scroll'>
                 {
-                    filteredNotes.length > 0 ? 
+                    notes.length > 0 ? 
                         notes.map((note) => (
                             <NotePreview key={note._id} { ...note }/>
                         ))
@@ -93,10 +67,6 @@ return (
         </div>
 
         <SideBar />
-
-        {
-            isNoteCategoryFormOpen && <NoteCategoryForm />
-        }
     </div>
 )
 }

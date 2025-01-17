@@ -36,8 +36,8 @@ function Todolist() {
                             onChange={(e) => handleChangeCategory(e)}
                         >
                             {
-                                categories.todos.map((c) => (
-                                    <option key={c} value={c}>{c}</option>
+                                categories.map(cat => (
+                                    <option key={cat} value={cat}>{cat}</option>
                                 ))
                             }
                             <option value='add'>+ Add category</option>

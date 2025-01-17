@@ -1,10 +1,9 @@
-import { useTodoStore, useAccountStore, useNoteStore } from "../Utils/Utils.ts"
+import { useTodoStore, useAccountStore } from "../Utils/Utils.ts"
 import { useEffect } from 'react'
 
 function PopupBackground() {
     const { setIsCreateOpen, setIsEditOpen, setIsCategoryFormOpen } = useTodoStore()
     const { setIsSearching } = useAccountStore()
-    const { setIsNoteCategoryFormOpen } = useNoteStore()
 
     useEffect(() => {
       document.addEventListener('keydown', (event) => {
@@ -13,7 +12,6 @@ function PopupBackground() {
             setIsEditOpen(false)
             setIsCategoryFormOpen(false)
             setIsSearching(false)
-            setIsNoteCategoryFormOpen(false)
           }
       });
     })
@@ -23,7 +21,6 @@ function PopupBackground() {
         setIsEditOpen(false)
         setIsCategoryFormOpen(false)
         setIsSearching(false)
-        setIsNoteCategoryFormOpen(false)
     }
 
   return (

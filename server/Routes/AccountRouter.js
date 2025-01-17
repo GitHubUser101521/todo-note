@@ -76,9 +76,9 @@ AccountRouter.delete('/logout', (req, res) => {
 
 // OTHERS
 
-AccountRouter.post('/addCategory/:type/:userId', async (req, res) => {
+AccountRouter.post('/addCategory/:userId', async (req, res) => {
     try {
-      const { type, userId } = req.params;
+      const { userId } = req.params;
       const { categoryName } = req.body
   
       const user = await UserModel.findById(userId);
@@ -87,7 +87,7 @@ AccountRouter.post('/addCategory/:type/:userId', async (req, res) => {
         return res.status(404).json({ message: 'User not found' });
       }
   
-      user.categories[type].push(categoryName); 
+      user.categories.push(categoryName); 
       await user.save();
   
       return res.status(201).json({ message: 'Successfully added new category' });
@@ -97,9 +97,9 @@ AccountRouter.post('/addCategory/:type/:userId', async (req, res) => {
     }
 })
 
-AccountRouter.delete('/deleteCategory/:type/:userId/:categoryToDel', async (req, res) => {
+AccountRouter.delete('/deleteCategory/:userId/:categoryToDel', async (req, res) => {
     try {
-        const { type, userId, categoryToDel } = req.params;
+        const { userId, categoryToDel } = req.params;
   
         const user = await UserModel.findById(userId);
   
@@ -107,9 +107,9 @@ AccountRouter.delete('/deleteCategory/:type/:userId/:categoryToDel', async (req,
             return res.status(404).json({ message: 'User not found' });
         }
   
-        const updatedCategories = user.categories[type].filter(cat => cat !== categoryToDel);
+        const updatedCategories = user.categories.filter(cat => cat !== categoryToDel);
   
-        user.categories[type] = updatedCategories;
+        user.categories = updatedCategories;
         await user.save();
   
         return res.status(200).json({ message: 'Category deleted successfully' }); // Changed to 200 OK

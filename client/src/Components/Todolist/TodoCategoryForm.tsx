@@ -17,7 +17,7 @@ function CategoryForm() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        if (categories.todos.length > 12) {
+        if (categories.length > 12) {
             setError('You cannot have more than 12 categories')
             return
         }
@@ -29,14 +29,14 @@ function CategoryForm() {
             return
         }
         
-        const check = categories.todos.includes(newCategory)
+        const check = categories.includes(newCategory)
 
         if (check) {
             setError(`${newCategory} is already a category`)
             return
         }
 
-        const response = await fetch(`http://localhost:3000/addCategory/todos/${_id}`, {
+        const response = await fetch(`http://localhost:3000/addCategory/${_id}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ categoryName: newCategory }),
@@ -57,7 +57,7 @@ function CategoryForm() {
 
     const handleDeleteCategory = async (c: string) => {
         try {
-            const response = await fetch(`http://localhost:3000/deleteCategory/todos/${_id}/${c}`, {
+            const response = await fetch(`http://localhost:3000/deleteCategory/${_id}/${c}`, {
                 method: 'DELETE',
             })
 
@@ -104,7 +104,7 @@ function CategoryForm() {
                         All
                     </span>
                     {
-                        categories.todos.filter(cat => cat !== 'All').map((c) => (
+                        categories.filter(cat => cat !== 'All').map((c) => (
                             <span key={c} className='bg-slate-200 rounded-full px-3 gap-3 h-10 flex items-center'>
                                 {c} 
                                 <button 

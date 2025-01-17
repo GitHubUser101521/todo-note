@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom'
 function Create() {
   const { currentNote, setCurrentNote, convertToDate } = useNoteStore()
   const { accountInfos, setAccountInfos } = useAccountStore()
-  const { _id, title, createdAt, content, category } = currentNote
+  const { _id, title, createdAt, content } = currentNote
 
   const handleChangeContent = async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCurrentNote({ ...currentNote, content: e.target.value})
@@ -56,7 +56,7 @@ function Create() {
             onBlur={handleConfirmChange}
             spellCheck={false}
           />
-          <p className='text-xs pl-2'>{ convertToDate(createdAt) } { category === 'All' ? '' : `| ${category}`}</p>
+          <p className='text-xs pl-2'>{ convertToDate(createdAt) }</p>
         </div>
       </div>
       

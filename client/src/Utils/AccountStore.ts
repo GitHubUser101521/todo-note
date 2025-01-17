@@ -8,10 +8,7 @@ export type AccountType = {
     notes: NoteType[],
     createdAt: string,
     colors: string[],
-    categories: {
-        todos: string[],
-        notes: string[]
-    }
+    categories: string[]
 }
 
 export type NoteType = {
@@ -19,8 +16,6 @@ export type NoteType = {
     title: string,
     createdAt: string,
     content: string,
-    category: string,
-    color: string
 }
 
 export type TodoType = {
@@ -44,8 +39,6 @@ type AccountState = {
     setIsSearching: (newState: boolean) => void,
     currentCategory: string,
     setCurrentCategory: (newState: string) => void,
-    addNoteCategory: (newCategory: string) => void,
-    deleteNoteCategory: (categoryToDelete: string) => void,
 };
 
 export const useAccountStore = create<AccountState>()(
@@ -57,10 +50,7 @@ export const useAccountStore = create<AccountState>()(
                 todos: [],
                 notes: [],
                 createdAt: '',
-                categories: {
-                    todos: [],
-                    notes: []
-                },
+                categories: [],
                 colors: []
             },
             setAccountInfos: (infos) => {
@@ -70,10 +60,7 @@ export const useAccountStore = create<AccountState>()(
                 set((prevState) => ({
                   accountInfos: {
                     ...prevState.accountInfos,
-                    categories: {
-                      ...prevState.accountInfos.categories,
-                      todos: [...prevState.accountInfos.categories.todos, newCategory],
-                    },
+                    categories: [ ...prevState.accountInfos.categories, newCategory]
                   },
                 }));
             },
@@ -81,12 +68,7 @@ export const useAccountStore = create<AccountState>()(
                 set((prevState) => ({
                     accountInfos: {
                         ...prevState.accountInfos,
-                        categories: {
-                            ...prevState.accountInfos.categories,
-                            todos: prevState.accountInfos.categories.todos.filter(
-                                (category) => category !== categoryToDelete
-                            ),
-                        },
+                        categories: prevState.accountInfos.categories.filter(cat => cat !== categoryToDelete)
                     },
                 }));
             },
@@ -101,30 +83,6 @@ export const useAccountStore = create<AccountState>()(
             currentCategory: 'All',
             setCurrentCategory: (newState) => {
                 set({ currentCategory: newState })
-            },
-            addNoteCategory: (newCategory) => {
-                set((prevState) => ({
-                  accountInfos: {
-                    ...prevState.accountInfos,
-                    categories: {
-                      ...prevState.accountInfos.categories,
-                      notes: [...prevState.accountInfos.categories.notes, newCategory],
-                    },
-                  },
-                }));
-            },
-            deleteNoteCategory: (categoryToDelete) => {
-                set((prevState) => ({
-                    accountInfos: {
-                        ...prevState.accountInfos,
-                        categories: {
-                            ...prevState.accountInfos.categories,
-                            notes: prevState.accountInfos.categories.notes.filter(
-                                (category) => category !== categoryToDelete
-                            ),
-                        },
-                    },
-                }));
             },
         }),
         {
